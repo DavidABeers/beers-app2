@@ -41,7 +41,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.MainSceneController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
@@ -53,7 +53,7 @@
             <Button fx:id="newItem" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToNewItemScene" text="New Item" />
             <TableView fx:id="inventoryView" layoutY="104.0" prefHeight="253.0" prefWidth="640.0">
               <columns>
-                <TableColumn fx:id="snColumn" onEditCommit="#SaveSNChange" prefWidth="147.0" text="Serial Number" />
+                <TableColumn fx:id="snColumn" onEditCommit="#saveSNChange" prefWidth="147.0" text="Serial Number" />
                 <TableColumn fx:id="nameColumn" onEditCommit="#saveNameChange" prefWidth="276.0" text="Name" />
                   <TableColumn fx:id="priceColumn" onEditCommit="#savePriceChange" prefWidth="121.0" text="Price" />
               </columns>
