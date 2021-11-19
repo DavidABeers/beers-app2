@@ -21,6 +21,10 @@ public class MainSceneController {
     @FXML
     Button newItem;
     @FXML
+    Button removeItem;
+    @FXML
+    Button clearAll;
+    @FXML
     Button saveInventory;
     @FXML
     Button loadInventory;
@@ -81,5 +85,12 @@ public class MainSceneController {
     private void openLoadChooser(ActionEvent event){
         // call helper method for opening a file chooser to pick a tab separated, html, or json file.
     }
-
+    @FXML
+    public void deleteItem(ActionEvent event) {
+        // remove current item from inventory
+    }
+    @FXML
+    public void clearInventory(ActionEvent event){
+        // delete everything from the inventory
+    }
 }
