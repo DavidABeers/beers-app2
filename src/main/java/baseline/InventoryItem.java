@@ -6,9 +6,9 @@ package baseline;
 
 // just stores, fetches, and updates data for an item
 public class InventoryItem {
-    private String serialNumber = "A-XXX-XXX-XXX";
-    private String itemName = "new item";
-    private String price = "$ 0.00";
+    private String serialNumber;
+    private String itemName;
+    private String price;
 
     public InventoryItem(){
 
@@ -22,12 +22,15 @@ public class InventoryItem {
 
     public void setPrice(String price) {
         try{
+            MainSceneController mc = new MainSceneController();
             double priceDouble = Double.parseDouble(price);
             if(priceDouble<0){
                 // give an error somewhere
-
+                mc.showPriceError();
             }
-
+            else{
+                this.price = "$ " + price;
+            }
         }
         catch(Exception e){
             MainSceneController mc = new MainSceneController();

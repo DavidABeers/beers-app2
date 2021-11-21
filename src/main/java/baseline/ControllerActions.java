@@ -175,9 +175,9 @@ public class ControllerActions {
                 if(line.contains("<tr>")){
                     String sn = reader.nextLine().substring(4,16);
                     String nameLine = reader.nextLine();
-                    String name = nameLine.substring(4,nameLine.length());
+                    String name = nameLine.substring(4,nameLine.length()-4);
                     String priceLine = reader.nextLine();
-                    String price =priceLine.substring(4,priceLine.length());
+                    String price =priceLine.substring(4,priceLine.length()-4);
                     // add loaded item to inventory
                     InventoryItem item = new InventoryItem(sn, name, price);
                     inventory.addItem(item);

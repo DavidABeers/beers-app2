@@ -8,11 +8,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MainSceneController {
     private Stage primaryStage;
@@ -86,6 +88,7 @@ public class MainSceneController {
             else{
                 Label wrongSerialNumber = new Label();
                 wrongSerialNumber.setText("Invalid serial number");
+                inventoryView.refresh();
             }
         });
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -99,6 +102,14 @@ public class MainSceneController {
             InventoryItem item = event.getRowValue();
             item.setPrice(event.getNewValue());
         });
+    }
+
+    private void displayItem(){
+        //display the created item and add to the index
+        snColumn.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+
     }
 
     @FXML
@@ -158,7 +169,7 @@ public class MainSceneController {
         }
     }
     @FXML
-    private void openLoadChooser(ActionEvent event){
+    private void openLoadChooser(ActionEvent event) {
         //opening a file chooser
         // opens a file chooser
         FileChooser fileLoader = new FileChooser();
@@ -182,6 +193,11 @@ public class MainSceneController {
         else {
             ca.loadHTML(loadFile, inventory);
         }
+        for(InventoryItem item : inventory.getInventory()){
+            //inventoryView.getItems().add(item);
+            displayItem();
+        }
+
     }
     @FXML
     public void deleteItem(ActionEvent event) {
