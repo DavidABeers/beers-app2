@@ -9,7 +9,10 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class MainSceneController {
     private Stage primaryStage;
@@ -36,30 +39,36 @@ public class MainSceneController {
     }
 
     @FXML
-    Button newItem;
+    private Button newItem;
     @FXML
-    Button removeItem;
+    private Button removeItem;
     @FXML
-    Button clearAll;
+    private Button clearAll;
     @FXML
-    Button saveInventory;
+    private Button saveInventory;
     @FXML
-    Button loadInventory;
+    private Button loadInventory;
 
     // set up the table view to display info for each item
     @FXML
-    TableView<InventoryItem> inventoryView;
+    private TableView<InventoryItem> inventoryView;
     @FXML
-    TableColumn<InventoryItem, String> snColumn;
+    private TableColumn<InventoryItem, String> snColumn;
     @FXML
-    TableColumn<InventoryItem, String> nameColumn;
+    private TableColumn<InventoryItem, String> nameColumn;
     @FXML
-    TableColumn<InventoryItem, Double> priceColumn;
+    private TableColumn<InventoryItem, String> priceColumn;
 
     @FXML
-    TextField snSearch;
+    private TextField snSearch;
     @FXML
-    TextField nameSearch;
+    private TextField nameSearch;
+
+    private Label priceError = new Label();
+
+    public void showPriceError(){
+        priceError.setText("Invalid Price");
+    }
 
     public void initialize(){
         // set table view as editable
@@ -78,6 +87,17 @@ public class MainSceneController {
                 Label wrongSerialNumber = new Label();
                 wrongSerialNumber.setText("Invalid serial number");
             }
+        });
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        // check for name length between 2 and 256 characters
+        nameColumn.setOnEditCommit(event -> {
+            InventoryItem item = event.getRowValue();
+            item.setItemName(event.getNewValue());
+        });
+        priceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        priceColumn.setOnEditCommit(event -> {
+            InventoryItem item = event.getRowValue();
+            item.setPrice(event.getNewValue());
         });
     }
 
@@ -98,7 +118,7 @@ public class MainSceneController {
         // update the name of the selected item
     }
     @FXML
-    private void savePriceChange(TableColumn.CellEditEvent<InventoryItem, Double> event){
+    private void savePriceChange(TableColumn.CellEditEvent<InventoryItem, String> event){
         // update the name of the selected item
     }
 
@@ -113,7 +133,29 @@ public class MainSceneController {
 
     @FXML
     private void openSaveChooser(ActionEvent event){
-        // call helper method to open a file chooser that saves data as tab separated, html, or json file.
+        // save data as tab separated, html, or json file.
+        // opens a file chooser
+        FileChooser fileSaver = new FileChooser();
+        fileSaver.setTitle("Save Todo List");
+        // tab separated text file, json, and html filters
+        FileChooser.ExtensionFilter textFiles = new FileChooser.ExtensionFilter("Tab-separated (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter jsonFiles = new FileChooser.ExtensionFilter("JSON (*.json)", "*.json");
+        FileChooser.ExtensionFilter htmlFiles = new FileChooser.ExtensionFilter("Hyper-Text Markup Language (*.html)", "*.html");
+        fileSaver.getExtensionFilters().add(textFiles);
+        fileSaver.getExtensionFilters().add(jsonFiles);
+        fileSaver.getExtensionFilters().add(htmlFiles);
+        // make a file object with the file chooser
+        File saveFile = fileSaver.showSaveDialog(primaryStage);
+        // save the inventory depending on format
+        if(saveFile.getName().substring(saveFile.getName().length()-4).equals("txt")){
+            ca.saveAsText(saveFile, inventory);
+        }
+        else if(saveFile.getName().substring(saveFile.getName().length()-4).equals("son")){
+            ca.saveAsJson(saveFile, inventory);
+        }
+        else {
+            ca.saveAsHTML(saveFile, inventory);
+        }
     }
     @FXML
     private void openLoadChooser(ActionEvent event){
@@ -122,9 +164,11 @@ public class MainSceneController {
     @FXML
     public void deleteItem(ActionEvent event) {
         // remove current item from inventory
+        ca.removeItem(inventory, inventoryView.getSelectionModel().getSelectedItem());
     }
     @FXML
     public void clearInventory(ActionEvent event){
         // delete everything from the inventory
+        ca.removeAll(inventory);
     }
 }

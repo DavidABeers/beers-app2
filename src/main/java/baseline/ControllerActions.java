@@ -12,9 +12,18 @@ import java.util.Scanner;
 
 public class ControllerActions {
 
+    // add blank item to inventory
     public void addItem(Inventory inventory){
         InventoryItem newItem = new InventoryItem();
         inventory.addItem(newItem);
+    }
+    // remove item from inventory
+    public void removeItem(Inventory inventory, InventoryItem item){
+        inventory.removeItem(item);
+    }
+    // clear an inventory of all items it stores
+    public void removeAll(Inventory inventory){
+        inventory.clearList();
     }
 
     // ensures the serial number meets all requirements
@@ -55,4 +64,46 @@ public class ControllerActions {
         return true;
     }
 
+    public void saveAsText(File saveFile, Inventory inventory) {
+        try{
+            if(saveFile.createNewFile()){
+                // I did close the resource, Sonarlint is dumb
+                FileWriter writer = new FileWriter(saveFile);
+                for(InventoryItem item: inventory.getIneventory()){
+                    writer.write(item.getSerialNumber() +"\t");
+                    writer.write(item.getItemName() +"\t");
+                    writer.write(item.getPrice() +"\n");
+                }
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveAsJson(File saveFile, Inventory inventory) {
+
+    }
+
+    public void saveAsHTML(File saveFile, Inventory inventory) {
+        try{
+            if(saveFile.createNewFile()){
+                String endTableCell = "</td>\n";
+                // I did close the resource, Sonarlint is dumb
+                FileWriter writer = new FileWriter(saveFile);
+                writer.write("<title></title>\n<body>\n<table>\n");
+                for(InventoryItem item: inventory.getIneventory()){
+                    writer.write("<tr>\n");
+                    writer.write("<td>" + item.getSerialNumber() +endTableCell);
+                    writer.write("<td>" + item.getItemName() +endTableCell);
+                    writer.write("<td>" + item.getPrice() +endTableCell);
+                    writer.write("</tr>\n");
+                }
+                writer.write("</table>\n</body>\n");
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

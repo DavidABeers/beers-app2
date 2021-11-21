@@ -6,11 +6,23 @@ package baseline;
 
 // just stores, fetches, and updates data for an item
 public class InventoryItem {
-    private String serialNumber;
-    private String itemName;
-    private double price;
+    private String serialNumber = "A-XXX-XXX-XXX";
+    private String itemName = "new item";
+    private String price = "$ 0.00";
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
+        try{
+            double priceDouble = Double.parseDouble(price);
+            if(priceDouble<0){
+                // give an error somewhere
+
+            }
+
+        }
+        catch(Exception e){
+            MainSceneController mc = new MainSceneController();
+            mc.showPriceError();
+        }
         this.price = price;
     }
     public void setItemName(String itemName) {
@@ -21,7 +33,7 @@ public class InventoryItem {
         this.serialNumber = serialNumber;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
