@@ -10,6 +10,16 @@ public class InventoryItem {
     private String itemName = "new item";
     private String price = "$ 0.00";
 
+    public InventoryItem(){
+
+    }
+
+    public InventoryItem(String sn, String name, String price){
+        this.serialNumber = sn;
+        this.itemName = name;
+        this.price = price;
+    }
+
     public void setPrice(String price) {
         try{
             double priceDouble = Double.parseDouble(price);

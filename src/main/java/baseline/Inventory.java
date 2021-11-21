@@ -22,7 +22,7 @@ public class Inventory {
     public InventoryItem getItem(int index){
         return inventory.get(index);
     }
-    public ObservableList<InventoryItem> getIneventory(){
+    public ObservableList<InventoryItem> getInventory(){
         return this.inventory;
     }
 }

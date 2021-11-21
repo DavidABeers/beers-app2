@@ -74,9 +74,9 @@ public class MainSceneController {
         // set table view as editable
         inventoryView.setEditable(true);
         // sets tableview to see inventory. Might not be necessary, but how listview worked
-        inventoryView.setItems(inventory.getIneventory());
+        inventoryView.setItems(inventory.getInventory());
 
-        // validate input to serial number textfield
+        // validate input to serial number text field
         snColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         snColumn.setOnEditCommit(event -> {
             if(ca.validSerialNumber(event.getNewValue())){
@@ -147,10 +147,10 @@ public class MainSceneController {
         // make a file object with the file chooser
         File saveFile = fileSaver.showSaveDialog(primaryStage);
         // save the inventory depending on format
-        if(saveFile.getName().substring(saveFile.getName().length()-4).equals("txt")){
+        if(saveFile.getName().substring(saveFile.getName().length()-3).equals("txt")){
             ca.saveAsText(saveFile, inventory);
         }
-        else if(saveFile.getName().substring(saveFile.getName().length()-4).equals("son")){
+        else if(saveFile.getName().substring(saveFile.getName().length()-3).equals("son")){
             ca.saveAsJson(saveFile, inventory);
         }
         else {
@@ -159,7 +159,29 @@ public class MainSceneController {
     }
     @FXML
     private void openLoadChooser(ActionEvent event){
-        // call helper method for opening a file chooser to pick a tab separated, html, or json file.
+        //opening a file chooser
+        // opens a file chooser
+        FileChooser fileLoader = new FileChooser();
+        fileLoader.setTitle("Save Todo List");
+        // filters to tab separated text, json, and html files for loading
+        FileChooser.ExtensionFilter textFiles = new FileChooser.ExtensionFilter("Tab-separated (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter jsonFiles = new FileChooser.ExtensionFilter("JSON (*.json)", "*.json");
+        FileChooser.ExtensionFilter htmlFiles = new FileChooser.ExtensionFilter("Hyper-Text Markup Language (*.html)", "*.html");
+        fileLoader.getExtensionFilters().add(textFiles);
+        fileLoader.getExtensionFilters().add(jsonFiles);
+        fileLoader.getExtensionFilters().add(htmlFiles);
+        // get the file selected by the file chooser
+        File loadFile = fileLoader.showOpenDialog(primaryStage);
+        // load the inventory depending on format
+        if(loadFile.getName().substring(loadFile.getName().length()-3).equals("txt")){
+            ca.loadTabSeparatedText(loadFile, inventory);
+        }
+        else if(loadFile.getName().substring(loadFile.getName().length()-3).equals("son")){
+            ca.loadJson(loadFile, inventory);
+        }
+        else {
+            ca.loadHTML(loadFile, inventory);
+        }
     }
     @FXML
     public void deleteItem(ActionEvent event) {
