@@ -50,7 +50,7 @@
             <Font size="18.0" />
           </font>
         </Label>
-            <Button fx:id="newItem" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToNewItemScene" text="New Item" />
+            <Button fx:id="newItem" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#addNewItem" text="New Item" />
             <TableView fx:id="inventoryView" layoutY="104.0" prefHeight="253.0" prefWidth="640.0">
               <columns>
                 <TableColumn fx:id="snColumn" onEditCommit="#saveSNChange" prefWidth="147.0" text="Serial Number" />

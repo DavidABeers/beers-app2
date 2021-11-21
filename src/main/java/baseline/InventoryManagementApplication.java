@@ -21,12 +21,15 @@ public class InventoryManagementApplication extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MainInventoryScene.fxml")));
 
+
         Scene scene = new Scene(root);
         stage.setScene(scene);
-
+        Scene newItemScene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("newItemScene.fxml"))));
         stage.setTitle("Inventory Manager");
         MainSceneController controller = new MainSceneController();
         controller.setStage(stage);
+        controller.setPrimaryScene(scene);
+        controller.setNewItemScene(newItemScene);
         stage.show();
     }
 }
