@@ -14,8 +14,6 @@ import java.util.Scanner;
 
 public class ControllerActions {
 
-    JsonToInventory jti;
-
     // add blank item to inventory
     public void addItem(Inventory inventory){
         InventoryItem newItem = new InventoryItem();
@@ -30,8 +28,8 @@ public class ControllerActions {
         inventory.clearList();
     }
 
-    // ensures the serial number meets all requirements
-    public boolean validSerialNumber(String sn){
+    // ensures the serial number meets all requirements. Heck you, Sonarlint I'm not making a helper for this
+    public boolean validSerialNumber(String sn, Inventory inventory){
         // checks for incorrect formatting on characters 0, 1, 5, and 9
         if(sn.length()!=13 || sn.substring(0,1).toLowerCase().compareTo("a") < 0 ||
                 sn.substring(0,1).toLowerCase().compareTo("z") > 0 || sn.charAt(1) != '-' ||
@@ -64,6 +62,36 @@ public class ControllerActions {
                     sn.substring(i, i+1).compareTo("z")>0)){
                 return false;
             }
+        }
+        if(inventory!=null){
+            for(InventoryItem item: inventory.getInventory()){
+                if(item.getSerialNumber()!=null){
+                    if(item.getSerialNumber().equals(sn)){
+                        return false;
+                    }
+                }
+
+            }
+        }
+        return true;
+    }
+
+    public boolean validateName(String name){
+        return name.length() >= 2 && name.length() <= 256;
+    }
+
+    public boolean validatePrice(String price){
+        MainSceneController mc = new MainSceneController();
+        try{
+            double priceDouble = Double.parseDouble(price);
+            if(priceDouble<0){
+                // give an error somewhere
+                return false;
+            }
+        }
+        catch(Exception e){
+            mc.showPriceError();
+            return false;
         }
         return true;
     }
@@ -154,7 +182,7 @@ public class ControllerActions {
             // open a reader
             Reader inputReader = Files.newBufferedReader(Paths.get(loadFile.getPath()));
             // convert json to inventory object
-            jti = new Gson().fromJson(inputReader, JsonToInventory.class);
+            JsonToInventory jti = new Gson().fromJson(inputReader, JsonToInventory.class);
             InventoryItem[] inventoryArray = jti.getInventoryItems();
             for(InventoryItem item: inventoryArray){
                 inventory.addItem(item);
@@ -175,9 +203,9 @@ public class ControllerActions {
                 if(line.contains("<tr>")){
                     String sn = reader.nextLine().substring(4,16);
                     String nameLine = reader.nextLine();
-                    String name = nameLine.substring(4,nameLine.length()-4);
+                    String name = nameLine.substring(4,nameLine.length()-5);
                     String priceLine = reader.nextLine();
-                    String price =priceLine.substring(4,priceLine.length()-4);
+                    String price =priceLine.substring(4,priceLine.length()-5);
                     // add loaded item to inventory
                     InventoryItem item = new InventoryItem(sn, name, price);
                     inventory.addItem(item);

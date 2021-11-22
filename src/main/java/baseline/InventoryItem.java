@@ -21,22 +21,7 @@ public class InventoryItem {
     }
 
     public void setPrice(String price) {
-        try{
-            MainSceneController mc = new MainSceneController();
-            double priceDouble = Double.parseDouble(price);
-            if(priceDouble<0){
-                // give an error somewhere
-                mc.showPriceError();
-            }
-            else{
                 this.price = "$ " + price;
-            }
-        }
-        catch(Exception e){
-            MainSceneController mc = new MainSceneController();
-            mc.showPriceError();
-        }
-        this.price = price;
     }
     public void setItemName(String itemName) {
         this.itemName = itemName;

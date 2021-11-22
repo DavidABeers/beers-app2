@@ -8,7 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class newItemSceneController {
+public class NewItemSceneController {
     @FXML
     Button saveNewItem;
     @FXML

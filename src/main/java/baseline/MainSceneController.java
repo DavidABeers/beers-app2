@@ -4,6 +4,7 @@
  */
 package baseline;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -14,14 +15,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 
 public class MainSceneController {
     private Stage primaryStage;
     private Scene primaryScene;
     private Scene newItemScene;
-    private Inventory inventory = new Inventory();
-    private ControllerActions ca = new ControllerActions();
+    private final Inventory inventory = new Inventory();
+    private final ControllerActions ca = new ControllerActions();
     public void setStage(Stage stage){
         // get the stage because it's needed for file choosers
         primaryStage = stage;
@@ -65,11 +65,11 @@ public class MainSceneController {
     private TextField snSearch;
     @FXML
     private TextField nameSearch;
-
-    private Label priceError = new Label();
+    @FXML
+    private Label errorLabel;
 
     public void showPriceError(){
-        priceError.setText("Invalid Price");
+        errorLabel.setText("Invalid Price");
     }
 
     public void initialize(){
@@ -81,31 +81,53 @@ public class MainSceneController {
         // validate input to serial number text field
         snColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         snColumn.setOnEditCommit(event -> {
-            if(ca.validSerialNumber(event.getNewValue())){
+            if(ca.validSerialNumber(event.getNewValue(), inventory)){
                 InventoryItem item = event.getRowValue();
                 item.setSerialNumber(event.getNewValue());
+                errorLabel.setText("");
             }
             else{
-                Label wrongSerialNumber = new Label();
-                wrongSerialNumber.setText("Invalid serial number");
+                errorLabel.setText("Invalid serial number");
                 inventoryView.refresh();
             }
         });
         nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         // check for name length between 2 and 256 characters
         nameColumn.setOnEditCommit(event -> {
-            InventoryItem item = event.getRowValue();
-            item.setItemName(event.getNewValue());
+            if(ca.validateName(event.getNewValue())){
+                InventoryItem item = event.getRowValue();
+                item.setItemName(event.getNewValue());
+                errorLabel.setText("");
+            }
+            else{
+                errorLabel.setText("Invalid name");
+                inventoryView.refresh();
+            }
         });
         priceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         priceColumn.setOnEditCommit(event -> {
-            InventoryItem item = event.getRowValue();
-            item.setPrice(event.getNewValue());
+            if(ca.validatePrice(event.getNewValue())){
+                InventoryItem item = event.getRowValue();
+                item.setPrice(event.getNewValue());
+                errorLabel.setText("");
+            }
+            else{
+                errorLabel.setText("Invalid price");
+                inventoryView.refresh();
+            }
+        });
+        inventoryView.getSortOrder().addListener((ListChangeListener<? super TableColumn<InventoryItem, ?>>) observable -> {
+            if(snColumn.getSortType().equals(TableColumn.SortType.ASCENDING)){
+                snColumn.setSortType(TableColumn.SortType.DESCENDING);
+            }
+            else{
+                snColumn.setSortType(TableColumn.SortType.ASCENDING);
+            }
         });
     }
 
     private void displayItem(){
-        //display the created item and add to the index
+        // display the item in the cells properly
         snColumn.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -193,19 +215,19 @@ public class MainSceneController {
         else {
             ca.loadHTML(loadFile, inventory);
         }
-        for(InventoryItem item : inventory.getInventory()){
-            //inventoryView.getItems().add(item);
+        // whatever
+        for(InventoryItem ignored : inventory.getInventory()){
             displayItem();
         }
 
     }
     @FXML
-    public void deleteItem(ActionEvent event) {
+    private void deleteItem(ActionEvent event) {
         // remove current item from inventory
         ca.removeItem(inventory, inventoryView.getSelectionModel().getSelectedItem());
     }
     @FXML
-    public void clearInventory(ActionEvent event){
+    private void clearInventory(ActionEvent event){
         // delete everything from the inventory
         ca.removeAll(inventory);
     }
