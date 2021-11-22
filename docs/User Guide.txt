@@ -1,0 +1,22 @@
+/*
+ *  UCF COP3330 Fall 2021 Application Assignment 2 Solution
+ *  Copyright 2021 David Beers
+ */
+
+Inventory Manager User Guide
+============================
+1) Adding items to the list:
+    To add an item to the list, click "New Item"
+
+2) Removing Items from the list:
+    To remove only the currently selected item from the list, click "Remove Item"
+    To delete all items from the list, click "Clear Inventory"
+
+3) Editing Item Properties:
+    To access an item's properties, click the field you wish to edit, and enter a valid input
+
+4) Saving Your List:
+    To save a list, click "Save"
+
+5) Loading a List:
+    To load a list, click "Load"
