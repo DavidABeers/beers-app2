@@ -1,11 +1,93 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
-autonumber
+class ControllerActions{
++addItem()
++removeItem()
++removeAll()
++validSerialNumber()
++validateName()
++validatePrice()
++saveAsText()
++saveAsJson()
++saveAsHTML()
++loadTabSeparatedText()
++loadJson()
++loadHTML()
+}
+class Inventory{
+-ObservableList<InventoryItem> inventory
++additem
++removeItem()
++clearList()
++getItem()
++getInventory()
+}
+class InventoryItem{
+-String serialNumber
+-String itemName
+-String price
++InventoryItem()
++InventoryItem(String sn, String name, String price)
++setPrice(String price)
++setItemName(String itemName)
++setSerialNumber(String serialNumber)
++getPrice()
++getItemName()
++getSerialNumber()
+}
+class InventoryManagementApplication{
++start()
++main()
+}
+class JsonToInventory{
+-InventoryItem[] inventoryItems
++getInventoryItems()
++setInventoryItems()
+}
+class MainSceneController{
+-Stage primaryStage
+-Scene primaryScene
+-Scene newItemScene
+-Inventory inventory
+-ControllerActions ca
++setStage(Stage stage)
++setPrimaryScene(Scene scene)
++setNewItemScene(Scene scene)
++changeToNewItemScene()
++changeToPrimaryScene()
+-Button newItem
+-Button removeItem
+-Button clearAll
+-Button saveInventory
+-Button loadInventory
+-TableView<InventoryItem> inventoryView
+-TableColumn<InventoryItem, String> snColumn
+-TableColumn<InventoryItem, String> nameColumn
+-TableColumn<InventoryItem, String> priceColumn
+-TextField snSearch
+-TextField nameSearch
+-Label errorLabel
++showPriceError()
++initialize()
+-displayItem()
+-addNewItem(ActionEvent event)
+-saveSNChange(TableColumn.CellEditEvent<InventoryItem, String> event)
+-saveNameChange(TableColumn.CellEditEvent<InventoryItem, String> event)
+-savePriceChange(TableColumn.CellEditEvent<InventoryItem, String> event)
+-filterBySN(ActionEvent event)
+-filterByName(ActionEvent event)
+-openSaveChooser(ActionEvent event)
+-openLoadChooser(ActionEvent event)
+-deleteItem(ActionEvent event)
+-clearInventory(ActionEvent event)
+}
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+MainSceneController -- InventoryManagementApplication
+MainSceneController --|> ControllerActions
+Inventory --|> InventoryItem
+JsonToInventory --|> InventoryItem
+MainSceneController --|>Inventory
+ControllerActions --|> JsonToInventory
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
 @enduml
